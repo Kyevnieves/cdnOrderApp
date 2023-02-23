@@ -24,6 +24,24 @@ const upload = multer({
   },
 }).single("image");
 
+const uploadUserImage = multer({
+  storage: storage,
+  dest: path.join(__dirname, "public/images/users"),
+  limits: {
+    fileSize: 1500000,
+  },
+  fileFilter: (req, file, cb) => {
+    const fileType = /jpeg|jpg|png|webp/;
+    const mimetype = fileType.test(file.mimetype);
+    const extName = fileType.test(path.extname(file.originalname));
+    if (mimetype && extName) {
+      return cb(null, true);
+    }
+    cb("Error: debe ser una imagen soportada");
+  },
+}).single("image");
+
 module.exports = {
   upload,
+  uploadUserImage,
 };
